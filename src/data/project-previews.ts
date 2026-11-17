@@ -26,6 +26,7 @@ const glow = (at: string, color: string, reach: string) => `radial-gradient(circ
 
 /** Each cover's backdrop: soft colour glows over a dark base, with film grain laid on top by the .grain class. */
 export const projectCovers: Record<Project["slug"], string> = {
+  dayone: [glow("15% 90%", "#00ed64", "50%"), glow("90% 10%", "#00684a", "55%"), "#04140d"].join(", "),
   "silo-labs": [glow("12% 0%", "#5b2a9e", "48%"), glow("85% 105%", "#e2541f", "55%"), glow("35% 95%", "#9c2418", "45%"), "#0e0a12"].join(", "),
   agentigram: [glow("12% 92%", "#c97a35", "58%"), glow("88% 8%", "#6b6d73", "52%"), "#151517"].join(", "),
   litmus: [glow("75% 12%", "#1f8f7a", "60%"), glow("8% 95%", "#0d5a50", "55%"), "#0e2627"].join(", "),

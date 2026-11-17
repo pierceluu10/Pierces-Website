@@ -19,6 +19,17 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    slug: "dayone",
+    title: "Day One",
+    description: "Self-improving onboarding agent that sets up every new hire's machine",
+    longDescription:
+      "day one onboards new hires autonomously: it signs into your tools in a real browser, sets up the machine in a real terminal and verifies each step took effect. every error it hits and the fix that worked is stored in mongodb atlas, so the next hire's agent finds it by exact match or vector search and applies it instantly.",
+    github: "https://github.com/pierceluu10/DayOne",
+    award: { title: "Finalist", event: "MongoDB Agents in Context" },
+    cardTech: ["MongoDB Atlas", "Playwright", "Python"],
+    tech: ["python", "mongodb atlas", "atlas vector search", "playwright", "docker", "claude"],
+  },
+  {
     slug: "silo-labs",
     title: "Silo Labs",
     description: "Multi-agent pipeline that turns hardware requirements into simulated firmware",
