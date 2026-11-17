@@ -1,4 +1,6 @@
+import type { StaticImageData } from "next/image";
 import { projects } from "./projects";
+import bvtlPoster from "@/photos/bvtl-poster.webp";
 
 /** What a mention's hover card shows, plus where a click lands. */
 export type Source = {
@@ -13,6 +15,8 @@ export type Source = {
   dates?: string;
   /** One line on the work itself. */
   summary?: string;
+  /** Shown under the summary; clicking it opens it full size. */
+  photo?: { src: StaticImageData; alt: string };
   /** Where a click lands; without one the card is information only. */
   href?: string;
   /** Sources this one rolls up; the card lists each of them instead of one role. */
@@ -26,6 +30,7 @@ const EVENT_LOGOS: Record<string, string> = {
   "Hack the Valley": "/logos/hack-the-valley.svg",
   "Cursor x Toronto Tech Week": "/logos/cursor.svg",
   MakeUofT: "/logos/makeuoft.png",
+  "MongoDB Agents in Context": "/logos/mongodb.png",
 };
 
 const hackathonWins: Source[] = projects.flatMap(({ slug, title, github, award }) =>
@@ -48,7 +53,7 @@ export const SOURCES: Record<string, Source> = {
     logo: "/logos/papiers.svg",
     role: "AI Engineer Intern",
     dates: "present",
-    summary: "RAG and semantic search",
+    summary: "RAG & Agents",
     href: "https://papiers.ai/",
   },
   research: {
@@ -57,11 +62,12 @@ export const SOURCES: Record<string, Source> = {
     logo: UOFT_LOGO,
     role: "Software Engineer Intern",
     summary: "3D Virtual Teaching Lab and student metrics database",
+    photo: { src: bvtlPoster, alt: "Pierce presenting the BME Virtual Teaching Lab poster at UnERD 2026" },
   },
   hackathons: {
     key: "hackathons",
     name: "Hackathons",
-    role: `${hackathonWins.length} wins`,
+    role: `${hackathonWins.length} awards`,
     group: hackathonWins,
   },
 };

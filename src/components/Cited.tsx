@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useIsLight } from "@/lib/theme";
@@ -54,6 +55,34 @@ export const cardSurface = (isLight: boolean) => ({
     : "inset 0 1px 0 color-mix(in srgb, var(--foreground) 6%, transparent), 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -12px rgba(0, 0, 0, 0.6)",
 });
 
+/** A photo at full size over a dimmed page; a click anywhere or Escape closes it. */
+function Lightbox({ photo, onClose }: { photo: NonNullable<Source["photo"]>; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  // Portalled to the body: the hover card is transformed, which would pin a fixed overlay to the card instead.
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
+      onClick={onClose}
+      data-ocean-ignore
+      role="dialog"
+      aria-modal="true"
+      aria-label={photo.alt}
+      className="fixed inset-0 z-[60] flex cursor-zoom-out items-center justify-center bg-black/80 p-6 backdrop-blur-sm"
+    >
+      <Image src={photo.src} alt={photo.alt} sizes="90vw" className="max-h-full w-auto rounded-[8px] object-contain" />
+    </motion.div>,
+    document.body,
+  );
+}
+
 const open = (target: Source) => target.href && window.open(target.href, "_blank", "noopener");
 
 /** An underlined mention whose hover card reads source / role / one line; clicking opens the source. */
@@ -61,6 +90,8 @@ export function Cited({ source, children }: { source: string; children: ReactNod
   const isLight = useIsLight();
   const src = SOURCES[source];
   const [shown, setShown] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
+  const closeZoom = useCallback(() => setZoomed(false), []);
   const openTimer = useRef<ReturnType<typeof setTimeout>>();
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
 
@@ -151,6 +182,19 @@ export function Cited({ source, children }: { source: string; children: ReactNod
                 <CardHeader source={src} />
                 <span className="mt-[4px] text-[13px] leading-[18px]">{src.role}</span>
                 {src.summary && <span className="line-clamp-3 text-[12px] leading-[18px] opacity-60">{src.summary}</span>}
+                {src.photo && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setZoomed(true);
+                    }}
+                    aria-label={`Enlarge photo: ${src.photo.alt}`}
+                    className="mt-[6px] cursor-zoom-in overflow-hidden rounded-[6px] outline-none"
+                  >
+                    <Image src={src.photo.src} alt="" placeholder="blur" sizes={`${CARD_WIDTH}px`} className="block aspect-[16/9] h-auto w-full object-cover" />
+                  </button>
+                )}
               </span>
             )}
 
@@ -166,6 +210,7 @@ export function Cited({ source, children }: { source: string; children: ReactNod
           </motion.span>
         )}
       </AnimatePresence>
+      <AnimatePresence>{zoomed && src.photo && <Lightbox photo={src.photo} onClose={closeZoom} />}</AnimatePresence>
     </span>
   );
 }
