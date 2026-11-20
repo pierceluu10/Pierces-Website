@@ -236,7 +236,7 @@ export class OceanEngine {
   }
 
   private desiredCount() {
-    return this.W < 600 ? 3 : this.W < 1100 ? 4 : 5;
+    return this.W < 600 ? 2 : this.W < 1100 ? 3 : 4;
   }
 
   private makeJelly(x: number, y: number, z: number): Jelly {
