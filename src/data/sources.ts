@@ -2,7 +2,7 @@ import type { StaticImageData } from "next/image";
 import { projects } from "./projects";
 import bvtlPoster from "@/photos/bvtl-poster.webp";
 
-/** What a mention's hover card shows, plus where a click lands. */
+/** What a mention's hover card shows. */
 export type Source = {
   key: string;
   /** Shown beside the logo in the card header. */
@@ -17,8 +17,6 @@ export type Source = {
   summary?: string;
   /** Shown under the summary; clicking it opens it full size. */
   photo?: { src: StaticImageData; alt: string };
-  /** Where a click lands; without one the card is information only. */
-  href?: string;
   /** Sources this one rolls up; the card lists each of them instead of one role. */
   group?: Source[];
 };
@@ -33,9 +31,9 @@ const EVENT_LOGOS: Record<string, string> = {
   "MongoDB Agents in Context": "/logos/mongodb.png",
 };
 
-const hackathonWins: Source[] = projects.flatMap(({ slug, title, github, award }) =>
+const hackathonWins: Source[] = projects.flatMap(({ slug, title, award }) =>
   award
-    ? [{ key: slug, name: award.event, logo: EVENT_LOGOS[award.event], role: `${award.title} · ${title}`, href: github }]
+    ? [{ key: slug, name: award.event, logo: EVENT_LOGOS[award.event], role: `${award.title} · ${title}` }]
     : [],
 );
 
@@ -54,7 +52,6 @@ export const SOURCES: Record<string, Source> = {
     role: "AI Engineer Intern",
     dates: "present",
     summary: "RAG & Agents",
-    href: "https://papiers.ai/",
   },
   research: {
     key: "research",

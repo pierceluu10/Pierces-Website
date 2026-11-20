@@ -6,7 +6,6 @@ import { Check, Copy } from "lucide-react";
 import { Cited, cardSurface } from "./Cited";
 import { Container } from "./Container";
 import type { OceanStats } from "./ocean/engine";
-import { SOURCES } from "@/data/sources";
 import { useIsLight } from "@/lib/theme";
 
 const SOCIALS = [
@@ -22,16 +21,9 @@ const UNDERLINE =
 
 type MentionProps = { source: string; children: ReactNode };
 
-// Hover cards need a pointer, so on touch the mentions link straight to each source.
-function MobileMention({ source, children }: MentionProps) {
-  const { href, group } = SOURCES[source];
-  const target = href ?? group?.[0]?.href;
-  if (!target) return <span className={UNDERLINE}>{children}</span>;
-  return (
-    <a href={target} target="_blank" rel="noopener noreferrer" className={UNDERLINE}>
-      {children}
-    </a>
-  );
+// Hover cards need a pointer, so on touch a mention is plain underlined text.
+function MobileMention({ children }: MentionProps) {
+  return <span className={UNDERLINE}>{children}</span>;
 }
 
 function Quote() {
